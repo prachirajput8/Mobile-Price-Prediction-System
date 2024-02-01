@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Price Range Prediction Result</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 500px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mobile Price Range Prediction Result</h1>
+        <p style="color: red !important;">Predicted Price Range: {{ predicted_category }}</p>
+        <p>Input Features:</p>
+        <ul>
+            <li><strong>Battery Power:</strong> {{ battery_power }}</li>
+            <li><strong>Internal Memory (GB):</strong> {{ int_memory }}</li>
+            <li><strong>Front Camera (MP):</strong> {{ fc }}</li>
+            <li><strong>Number of Cores:</strong> {{ n_cores }}</li>
+            <li><strong>RAM (MB):</strong> {{ ram }}</li>
+            <li><strong>Talk Time (hours):</strong> {{ talk_time }}</li>
+            <li><strong>Dual Sim:</strong> {{ dual_sim }}</li>
+            <li><strong>WiFi:</strong> {{ wifi }}</li>
+            <li><strong>Primary Camera (MP):</strong> {{ pc }}</li>
+            <li><strong>Mobile Weight (g):</strong> {{ mobile_wt }}</li>
+        </ul>
+        <form method="POST">
+            {% csrf_token %}
+            `
+        </form>
+    </div>
+</body>
+</html>

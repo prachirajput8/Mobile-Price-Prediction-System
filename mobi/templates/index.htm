@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+         body {
+            background-image: url("https://eskipaper.com/images/phone-wallpaper-11.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0; /* Remove default body margin */
+        }
+        label {
+            width: 170px; /* Set the width of the label */
+            height:25px; /* Set the height of the label */
+            display: inline-block; /* Ensure the label behaves like a block element */
+            background-color: lightgray; /* Optional: Set a background color for the label */
+            text-align: center; /* Optional: Center the text within the label */
+            line-height: 30px; /* Optional: Set the line height to vertically center the text */
+        }
+        button{
+            text-align: center;
+        }
+    </style>
+    <title>Mobile Price Range Prediction</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+        <div class="body">
+        <div class="form-group" >
+            <label<div class="container" style="align-items: center; padding-left: 10px; ">
+        <h1 style="color: whitesmoke;">Mobile Price Range Prediction</h1>
+        <form id="predict-form">
+            {% csrf_token %}
+            <div class="form-group"  >
+                <label for="phone_model"><b>Select Phone Model:</b></label>
+                <select id="phone_model" name="phone_model" class="form-control" style="width: 400px; height: 40px; ">
+                    <option value="Redmi Note 9 Pro Max">Redmi Note 9 Pro Max</option>
+                    <option value="One Plus">One Plus</option>
+                    <option value="I phone">I phone</option>
+                    <option value="Samsung Galaxy z Fold 5G">Samsung Galaxy z Fold 5G</option>
+                    <option value="Vivo Y22">Vivo Y22</option>
+                    <option value="Xiaomi Redmi series">Xiaomi Redmi series</option>
+                    <option value="Samsung Galaxy M22">Samsung Galaxy M22</option>
+                    <option value="iPhone 13">iPhone 13</option>
+                    <option value="Google Pixel 6 Pro">Google Pixel 6 Pro</option>
+                    <option value="Motorola Moto E7">Motorola Moto E7</option>
+                    <option value="Samsung Galaxy Z Fold 3">Samsung Galaxy Z Fold 3</option>
+                </select>
+            </div>
+            <div id="phone_details_section"></div>
+           
+            <button type="submit" class="btn btn-primary"  style="margin: auto;">Predict</button>
+        </form>
+        {% load static %}
+
+        <div id="loading-animation" class="mt-3 text-center" style="display: none;">
+            <img src="{% static 'loading.gif' %}" alt="Loading" width="50">
+            <p>Predicting...</p>
+        </div>
+        
+        <div id="prediction" class="mt-3" style="color: white;"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+    $('#phone_model').on('change', function() {
+        var selectedModel = $(this).val();
+        if (selectedModel) {
+            fetchPhoneDetails(selectedModel);
+        }
+    });
+});
+
+
+function fetchPhoneDetails(selectedModel) {
+    $.ajax({
+        type: 'GET',
+        url: 'get_phone_details/',
+        data: { phone_name: selectedModel },
+        success: function(response) {
+            if ('error' in response) {
+                // Handle the error (phone not found)
+            } else {
+                updateInputFields(response);
+            }
+        }
+    });
+}
+
+function updateInputFields(phoneDetails) {
+    // Construct HTML for input fields with phone details
+    var inputFieldsHTML = `
+        <div class="form-group">
+            <label for="battery_power" style="width: 150px; height:25px; display: inline-block; background-color: lightgray; text-align: center; line-height: 30px; ">Battery_Power:</label>
+            <input type="number" id="battery_power" name="battery_power" class="form-control" value="${phoneDetails.battery_power}" required inputmode="numeric" style="width: 300px; height: 30px;">
+        </div>0
+        <div class="form-group">
+            <label for="int_memory" style="width: 150px; height:25px; display: inline-block; background-color: lightgray; text-align: center; line-height: 30px; ">Internal_Memory(GB):</label>
+            <input type="number" id="int_memory" name="int_memory" class="form-control" value="${phoneDetails.int_memory}" required inputmode="numeric" style="width: 300px; height: 30px;"style="width: 300px; height: 30px;">
+        </div>
+        <div class="form-group">
+            <label for="fc">F_Camera(MP):</label>
+            <input type="number" id="fc" name="fc" class="form-control" value="${phoneDetails.fc}" required inputmode="numeric" style="width: 300px; height: 30px;"style="border: 3px solid black width: 100%; >
+        </div> 
+        <div class="form-group">
+            <label for="n_cores">No_of_Cores:</label>
+            <input type="number" id="n_cores" name="n_cores" class="form-control" value="${phoneDetails.n_cores}" required inputmode="numeric" style="width: 300px; height: 30px;"style="width: 150px; height: 30px;">
+        </div>
+        <div class="form-group">
+            <label for="ram">RAM(MB):</label>
+            <input type="number" id="ram" name="ram" class="form-control" value="${phoneDetails.ram}" required inputmode="numeric"style="width: 300px; height: 30px;">
+        </div>
+        <div class="form-group">
+            <label for="talk_time" style="width: 150px; height:25px; display: inline-block; background-color: lightgray; text-align: center; line-height: 30px; ">Talk_Time(hours):</label>
+            <input type="number" id="talk_time" name="talk_time" class="form-control" value="${phoneDetails.talk_time}" required inputmode="numeric"style="width: 300px; height: 30px;">
+        </div>
+        <div class="form-group">
+            <label for="dual_sim">Dual sim:</label>
+            <input type="number" id="dual_sim" name="dual_sim" step="0.1" class="form-control" value="${phoneDetails.dual_sim}" required inputmode="numeric"style="width: 300px; height: 30px;">
+        </div>
+        <div class="form-group">
+            <label for="wifi">WiFi:</label>
+            <input type="number" id="wifi" name="wifi" class="form-control" value="${phoneDetails.wifi}" required inputmode="numeric"style="width: 300px; height: 30px;">
+        </div>
+        <div class="form-group">
+            <label for="pc">Primary Camera(MP):</label>
+            <input type="number" id="pc" name="pc" class="form-control" value="${phoneDetails.pc}" required inputmode="numeric"style="width: 300px; height: 30px;">
+        </div>
+        <div class="form-group">
+            <label for="mobile_wt">Mobile Weight (g):</label>
+            <input type="number" id="mobile_wt" name="mobile_wt" class="form-control" value="${phoneDetails.mobile_wt}" required inputmode="numeric"style="width: 300px; height: 30px;">
+        </div>
+
+    `;
+
+    $('#phone_details_section').html(inputFieldsHTML);
+}
+$(document).ready(function() {
+    $('#predict-form').on('submit', function(event) {
+        event.preventDefault();
+        $('#loading-animation').show();
+        $('#prediction').hide();
+
+        $.ajax({
+            type: 'POST',
+            url: 'predict/',
+            data: $(this).serialize(),
+            success: function(response) {
+                console.log(response); // Check the structure of the response
+                setTimeout(function() {
+                    $('#loading-animation').hide();
+                    if ('prediction' in response) {
+                        $('#prediction').text('Predicted Price Range: ' + response.prediction);
+                    } else {
+                        $('#prediction').text('Prediction not available.');
+                    }
+                    $('#prediction').show();
+                }, 1500);
+            }
+        });
+    });
+});
+    </script>
+</body>
+</html>
